@@ -31,7 +31,11 @@ except Exception as e:
 
 # เรียกใช้ตัวตรวจจับใบหน้ามาตรฐานของ OpenCV
 # ดึงไฟล์โมเดลตรวจจับใบหน้าผ่าน URL โดยตรงเพื่อระบบออนไลน์
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+# กำหนดตำแหน่งพาธไฟล์ให้ชัดเจนเพื่อให้ระบบออนไลน์หาเจอชัวร์ๆ
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+xml_path = os.path.join(BASE_DIR, 'haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier(xml_path)
 
 
 # ฟังก์ชันเขียนภาษาไทยลงบนภาพ OpenCV แบบดึงฟอนต์ระบบ Windows อัตโนมัติ
