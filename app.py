@@ -30,7 +30,7 @@ except Exception as e:
     df = None
 
 # เรียกใช้ตัวตรวจจับใบหน้ามาตรฐานของ OpenCV
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier(cv2.samples.findFile(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'))
 
 # ฟังก์ชันเขียนภาษาไทยลงบนภาพ OpenCV แบบดึงฟอนต์ระบบ Windows อัตโนมัติ
 def draw_thai_text(img, text, position, font_size=24, color=(255, 255, 255)):
