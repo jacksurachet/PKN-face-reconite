@@ -28,6 +28,7 @@ try:
 except Exception as e:
     st.error(f"⚠️ สัญญาณเชื่อมต่อ Google Sheets ขัดข้อง (ตรวจสอบไฟล์ secrets.toml): {e}")
     df = None
+# =================================================================
 # เปลี่ยนมาใช้ระบบตรวจจับใบหน้าของ Google MediaPipe ที่รันออนไลน์ได้ 100%
 import mediapipe as mp
 
@@ -37,7 +38,6 @@ class OnlineFaceDetector:
         self.face_detection = self.mp_face_detection.FaceDetection(min_detection_confidence=0.5)
 
     def detectMultiScale(self, gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)):
-        # แปลงเป็นภาพสีเพื่อส่งให้ระบบ Google ประมวลผล
         rgb = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
         results = self.face_detection.process(rgb)
         faces = []
@@ -46,10 +46,12 @@ class OnlineFaceDetector:
             for detection in results.detections:
                 bboxC = detection.location_data.relative_bounding_box
                 nx, ny, nw, nh = int(bboxC.xmin * w), int(bboxC.ymin * h), int(bboxC.width * w), int(bboxC.height * h)
-                # ป้องกันค่าติดลบขอบจอ
                 nx, ny = max(0, nx), max(0, ny)
                 faces.append((nx, ny, nw, nh))
         return faces
+
+face_cascade = OnlineFaceDetector()
+# =================================================================
 
 # สร้างตัวแปรชื่อเดิมเพื่อให้เข้ากับโค้ดส่วนอื่นของคุณแจ็คโดยไม่ต้องรื้อระบบ
 face_cascade = OnlineFaceDetector()
