@@ -1,7 +1,3 @@
 streamlit
+streamlit-gsheets
 opencv-python-headless
-numpy
-Pillow
-st-gsheets-connection
-requests
-mediapipe
