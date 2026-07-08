@@ -31,14 +31,8 @@ except Exception as e:
 
 # เรียกใช้ตัวตรวจจับใบหน้ามาตรฐานของ OpenCV
 # ดึงไฟล์โมเดลตรวจจับใบหน้าผ่าน URL โดยตรงเพื่อระบบออนไลน์
-xml_url = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
-import urllib.request
-import os
-
-if not os.path.exists('haarcascade_frontalface_default.xml'):
-    urllib.request.urlretrieve(xml_url, 'haarcascade_frontalface_default.xml')
-
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
 
 # ฟังก์ชันเขียนภาษาไทยลงบนภาพ OpenCV แบบดึงฟอนต์ระบบ Windows อัตโนมัติ
 def draw_thai_text(img, text, position, font_size=24, color=(255, 255, 255)):
