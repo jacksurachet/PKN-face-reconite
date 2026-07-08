@@ -28,15 +28,31 @@ try:
 except Exception as e:
     st.error(f"⚠️ สัญญาณเชื่อมต่อ Google Sheets ขัดข้อง (ตรวจสอบไฟล์ secrets.toml): {e}")
     df = None
+# เปลี่ยนมาใช้ระบบตรวจจับใบหน้าของ Google MediaPipe ที่รันออนไลน์ได้ 100%
+import mediapipe as mp
 
-# เรียกใช้ตัวตรวจจับใบหน้ามาตรฐานของ OpenCV
-# ดึงไฟล์โมเดลตรวจจับใบหน้าผ่าน URL โดยตรงเพื่อระบบออนไลน์
-# กำหนดตำแหน่งพาธไฟล์ให้ชัดเจนเพื่อให้ระบบออนไลน์หาเจอชัวร์ๆ
-import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-xml_path = os.path.join(BASE_DIR, 'haarcascade_frontalface_default.xml')
-face_cascade = cv2.CascadeClassifier(xml_path)
+class OnlineFaceDetector:
+    def __init__(self):
+        self.mp_face_detection = mp.solutions.face_detection
+        self.face_detection = self.mp_face_detection.FaceDetection(min_detection_confidence=0.5)
 
+    def detectMultiScale(self, gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)):
+        # แปลงเป็นภาพสีเพื่อส่งให้ระบบ Google ประมวลผล
+        rgb = cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
+        results = self.face_detection.process(rgb)
+        faces = []
+        if results.detections:
+            h, w = gray.shape
+            for detection in results.detections:
+                bboxC = detection.location_data.relative_bounding_box
+                nx, ny, nw, nh = int(bboxC.xmin * w), int(bboxC.ymin * h), int(bboxC.width * w), int(bboxC.height * h)
+                # ป้องกันค่าติดลบขอบจอ
+                nx, ny = max(0, nx), max(0, ny)
+                faces.append((nx, ny, nw, nh))
+        return faces
+
+# สร้างตัวแปรชื่อเดิมเพื่อให้เข้ากับโค้ดส่วนอื่นของคุณแจ็คโดยไม่ต้องรื้อระบบ
+face_cascade = OnlineFaceDetector()
 
 # ฟังก์ชันเขียนภาษาไทยลงบนภาพ OpenCV แบบดึงฟอนต์ระบบ Windows อัตโนมัติ
 def draw_thai_text(img, text, position, font_size=24, color=(255, 255, 255)):
