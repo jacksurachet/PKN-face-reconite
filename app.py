@@ -34,7 +34,6 @@ if menu == "📹 ระบบสแกนใบหน้าหน้างาน
     st.write("ระบบดึงกล้องตรวจจับใบหน้า ล็อกสิทธิ์การบันทึกและส่งไลน์เข้ากลุ่มวันละ 1 ครั้ง")
     
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
     def draw_thai_text(img, text, position, font_size=24, color=(0, 255, 0)):
         img_pil = Image.fromarray(img)
         draw = ImageDraw.Draw(img_pil)
