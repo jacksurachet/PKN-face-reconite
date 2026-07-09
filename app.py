@@ -33,7 +33,19 @@ if menu == "📹 ระบบสแกนใบหน้าหน้างาน
     st.title("🖲️ ระบบบันทึกข้อมูลนักเรียนและแจ้งเตือนผ่าน LINE OA")
     st.write("ระบบดึงกล้องตรวจจับใบหน้า ล็อกสิทธิ์การบันทึกและส่งไลน์เข้ากลุ่มวันละ 1 ครั้ง")
     
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+ # --- แก้ไขระบบโหลดโมเดลใบหน้าให้รองรับทั้งในเครื่องและบนคลาวด์ ---
+HAAR_FILE = "haarcascade_frontalface_default.xml"
+if not os.path.exists(HAAR_FILE):
+    # ถ้าไม่มีไฟล์ในแอป ให้โหลดตรงจาก GitHub OpenCV ทางการมาเก็บไว้เลย
+    haar_url = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
+    try:
+        response = requests.get(haar_url)
+        with open(HAAR_FILE, "wb") as f:
+            f.write(response.content)
+    except Exception as e:
+        st.error(f"⚠️ โหลดไฟล์ตรวจจับใบหน้าขัดข้อง: {e}")
+
+face_cascade = cv2.CascadeClassifier(HAAR_FILE)
     def draw_thai_text(img, text, position, font_size=24, color=(0, 255, 0)):
         img_pil = Image.fromarray(img)
         draw = ImageDraw.Draw(img_pil)
